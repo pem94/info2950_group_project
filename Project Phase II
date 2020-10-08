@@ -1,0 +1,271 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Exploring Spotify and other stuffs\n",
+    "\n",
+    "## Research Questions\n",
+    "\n",
+    "How has the duration of songs changed over the past century with the introduction of new music technology? "
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Data cleaning\n",
+    "- Have an initial draft of your data cleaning appendix\n",
+    "- Document every step that takes your raw data files and turns it into the analysis-ready dataset that you would submit with your final project\n",
+    "- All of your data cleaning code should be found in this section and you may want to explain the steps of your data cleaning in words as well\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 172,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "<ipython-input-172-62e02af2acb3>:28: FutureWarning: Indexing with multiple keys (implicitly converted to a tuple of keys) will be deprecated, use a list instead.\n",
+      "  duration_year = new_data.groupby([\"year\"])['duration_ms','tempo'].mean()\n"
+     ]
+    },
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Duration_ms</th>\n",
+       "      <th>Tempo</th>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>year</th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>1921</th>\n",
+       "      <td>229911.914062</td>\n",
+       "      <td>100.397758</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1922</th>\n",
+       "      <td>167904.541667</td>\n",
+       "      <td>101.376139</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1923</th>\n",
+       "      <td>178356.301775</td>\n",
+       "      <td>112.456598</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1924</th>\n",
+       "      <td>188461.649789</td>\n",
+       "      <td>120.653359</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1925</th>\n",
+       "      <td>184130.699620</td>\n",
+       "      <td>115.671715</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>...</th>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2016</th>\n",
+       "      <td>219400.763840</td>\n",
+       "      <td>119.070344</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2017</th>\n",
+       "      <td>209343.613000</td>\n",
+       "      <td>116.840278</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2018</th>\n",
+       "      <td>200919.119000</td>\n",
+       "      <td>122.004325</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2019</th>\n",
+       "      <td>197733.133000</td>\n",
+       "      <td>118.868163</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2020</th>\n",
+       "      <td>197114.662301</td>\n",
+       "      <td>121.228704</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "<p>100 rows × 2 columns</p>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "        Duration_ms       Tempo\n",
+       "year                           \n",
+       "1921  229911.914062  100.397758\n",
+       "1922  167904.541667  101.376139\n",
+       "1923  178356.301775  112.456598\n",
+       "1924  188461.649789  120.653359\n",
+       "1925  184130.699620  115.671715\n",
+       "...             ...         ...\n",
+       "2016  219400.763840  119.070344\n",
+       "2017  209343.613000  116.840278\n",
+       "2018  200919.119000  122.004325\n",
+       "2019  197733.133000  118.868163\n",
+       "2020  197114.662301  121.228704\n",
+       "\n",
+       "[100 rows x 2 columns]"
+      ]
+     },
+     "execution_count": 172,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "import pandas as pd\n",
+    "import matplotlib.pyplot as plt\n",
+    "\n",
+    "raw_year_data = pd.read_csv(\"data_by_year.csv\")\n",
+    "raw_genre_data = pd.read_csv(\"data_by_genres.csv\")\n",
+    "raw_artist_data = pd.read_csv(\"data_by_artist.csv\")\n",
+    "total_data = pd.read_csv(\"data.csv\")\n",
+    "\n",
+    "#Removing Relevant Columns\n",
+    "new_year_data = raw_year_data[['year','danceability', 'duration_ms','instrumentalness','liveness','loudness','tempo','valence','popularity']]\n",
+    "new_genre_data = raw_genre_data[['genres','danceability', 'duration_ms','instrumentalness','liveness','loudness','tempo','valence','popularity']]\n",
+    "new_artist_data = raw_artist_data[['artists','danceability', 'duration_ms','instrumentalness','liveness','loudness','tempo','popularity']]\n",
+    "\n",
+    "#Cleaning Artist Data\n",
+    "\n",
+    "new_artist_data.drop_duplicates()\n",
+    "new_artist_data.iloc[0:27261] #removed artists with names that aren't English\n",
+    "\n",
+    "#Cleaning Genre Data\n",
+    "new_genre_data.iloc[2:] #removing first two non-sensiscal rows\n",
+    "\n",
+    "#dropping unwanted columns and creating new dataframe\n",
+    "\n",
+    "new_data = total_data.drop([\"danceability\",\"name\",\"speechiness\",\"acousticness\",\"id\",\"release_date\",\"loudness\",\"liveness\",\"key\",\"instrumentalness\",\"explicit\",\"energy\",\"mode\",\"valence\"],axis=1)\n",
+    "\n",
+    "#grouping data by year and averaging the duration and tempo of all the songs released in that year\n",
+    "\n",
+    "duration_year = new_data.groupby([\"year\"])['duration_ms','tempo'].mean()\n",
+    "df_year = pd.DataFrame(duration_year)\n",
+    "\n",
+    "#renaming columns in new dataframe\n",
+    "\n",
+    "df_year.rename(columns={\"duration_ms\":\"Avg_Dur_ms\"})\n",
+    "\n",
+    "#capitalizing names of columns\n",
+    "\n",
+    "df_year.columns = df_year.columns.str.capitalize()\n",
+    "\n",
+    "#create new data frame with innovative technologies\n",
+    "\n",
+    "\n",
+    "#finding dataset with genre, match the duration in ms to this dataset to find the genres of each year\n",
+    "\n",
+    "#show new dataframe\n",
+    "\n",
+    "\n",
+    "df_year\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Data description \n",
+    "- Have an initial draft of your data description section\n",
+    "- Your data description should be about your analysis-ready data"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Data limitations \n",
+    "- Identify any potential problems with your dataset"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Exploratory data analysis\n",
+    "- Perform an (initial) exploratory data analysis"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Questions for reviewers\n",
+    "- We want to consolidate the genres we have (currently there are over 2000 unique genres), but we're not sure the best way to do this. Is it easiest to do by hand? \n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.8.3"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}
